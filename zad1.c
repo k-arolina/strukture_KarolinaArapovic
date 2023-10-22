@@ -8,7 +8,7 @@
 
 
 
-/* 
+/*
 Napisati program koji prvo proèita koliko redaka ima datoteka, tj. koliko ima studenata
 zapisanih u datoteci. Nakon toga potrebno je dinamièki alocirati prostor za niz struktura
 studenata (ime, prezime, bodovi) i uèitati iz datoteke sve zapise. Na ekran ispisati ime,
@@ -30,38 +30,55 @@ int allocMemAndReadStud(int noStud);
 int main()
 {
 	int i;
-	int brRed;
+	int brStud;
+	//float rel_bod;
+	//FILE* fp = NULL;
+	brStud = readNoRowsInFile();
+	if (brStud <= 0) {
+		return 1;
+	}
 
-	brRed = readNoRowsInFile();
-	allocMemAndReadStud(brRed);
 
-	
-	
+
+	allocMemAndReadStud(brStud);
+	/*for (int i = 0; i < brStud; i++) {
+		printf("%s %s %d ", st[i].ime, st[i].prezime, st[i].bodovi);
+
+		st[i].relativni_broj_bodova = ((float)st[i].bodovi / max_bodovi )* 100;
+		printf("%.2f%%\n", st[i].relativni_broj_bodova);
+		printf("\n");
+	}*/
+
+
+
 	return 0;
 }
 
 
 int readNoRowsInFile() {
+
 	int counter = 0;
 
-	FILE* dat = NULL;
 	char buffer[MAX_SIZE] = { 0 };
-	
-	dat = fopen("studenti.txt", "r");
+
+	FILE* dat = fopen("studenti.txt", "r");
 
 
-	if (!dat)
-	{
-		printf("Neuspjesno otvaranje!\n");
+	if (!dat) {
+		printf("neuspjesno otvorena!");
 		return FILE_NOT_OPEN;
 
 	}
+	else
 
-	while (!feof(dat))
-	{
-		fgets(buffer,MAX_SIZE, dat);
-		counter++;
-	}
+
+
+
+		while (!feof(dat))
+		{
+			fgets(buffer, MAX_SIZE, dat);
+			counter++;
+		}
 	fclose(dat);
 
 	return counter;
@@ -69,37 +86,49 @@ int readNoRowsInFile() {
 int allocMemAndReadStud(int noStud) {
 
 	int i;
-	
-	
+
+
 	Student* stud = (Student*)malloc(noStud * sizeof(Student));
-	FILE* dat = NULL;
-	dat = fopen("studenti.txt", "r");
+
+	FILE* dat = fopen("studenti.txt", "r");
 
 
 
 
 	if (!dat) {
-		printf("Nespjesno otvaranje!");
-		
+		printf("neuspjesno otvorena!");
+
 		return FILE_NOT_OPEN;
-	}
-	for (i = 0; i < noStud; i++) {
-		fscanf(dat, "%s", stud->ime);
-		fscanf(dat, " %s", stud->prezime);
-		fscanf(dat, " %d", &stud->bodovi);
-		
 
 	}
-	for (i = 0; i < noStud; i++) {
 
 
-		stud->relativni_broj_bodova = stud->bodovi / max_bodovi * 100;
-	}
+
+
+
+
 
 	for (i = 0; i < noStud; i++) {
-		printf("%s %s %d %f\n", stud->ime, stud->prezime, stud->bodovi, stud->relativni_broj_bodova);
+		fscanf(dat, " %s ", stud[i].ime);
+		fscanf(dat, " %s  ", stud[i].prezime);
+		fscanf(dat, " %d", &stud[i].bodovi);
+
+
 	}
+
+	printf("IME: Prezime: APS.Bodovi\n");
+	for (i = 0; i < noStud; i++) {
+		printf(" %s\t%s\t%d\n", stud[i].ime, stud[i].prezime, stud[i].bodovi);
+		// printf(" %s\t",stud[i].ime);
+		// printf(" %s\t",stud[i].prezime);
+		// printf("%d\n",stud[i].bodovi);
+		stud[i].relativni_broj_bodova = (float)stud[i].bodovi / 25 * 100;
+		printf(" %.2f%%\n", stud[i].relativni_broj_bodova);
+	}
+
 	fclose(dat);
+
+	free(stud);
 
 
 	return 0;
