@@ -1,7 +1,3 @@
-// OLD CODE
-
-
-
 /*  2. Definirati strukturu osoba (ime, prezime, godina rodjenja) i napisati program koji:
 A. dinamicki dodaje novi element na pocetak liste,
 B. ispisuje listu,
