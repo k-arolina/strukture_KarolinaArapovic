@@ -1,0 +1,2 @@
+﻿Source.obj : error LNK2019: unresolved external symbol printPerson referenced in function deleteElement
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Zad2dovrsen\x64\Debug\Zad2dovrsen.exe : fatal error LNK1120: 1 unresolved externals
