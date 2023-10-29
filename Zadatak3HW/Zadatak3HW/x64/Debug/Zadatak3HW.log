@@ -1,0 +1,4 @@
+﻿  SourceZad3.c
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Zadatak3HW\Zadatak3HW\SourceZad3.c(100,3): error C2143: syntax error: missing ';' before 'break'
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Zadatak3HW\Zadatak3HW\SourceZad3.c(183,26): warning C4047: 'return': 'Position' differs in levels of indirection from 'int'
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Zadatak3HW\Zadatak3HW\SourceZad3.c(200,25): warning C4047: 'return': 'Position' differs in levels of indirection from 'int'
