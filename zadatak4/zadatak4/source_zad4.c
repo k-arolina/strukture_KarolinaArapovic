@@ -24,8 +24,8 @@ typedef struct _Polynome {
 int readPoly(Position P1, Position P2);				// cita polinom iz datoteke
 int readFileIntoList(Position P, char* buffer);		// sadrzaj datoteke ucitava u listu
 Position createElement(int coef, int exp);			// stvara novi element
-//int sortPoly(Position P, Position newP);			// sortira elemente
-int printPoly(char* polyNum, Position P);
+int printPoly(Position P);
+int connectList(Position P, Position newPolynome);
 //int polySum();
 //int polyMultiply();
 
@@ -36,9 +36,11 @@ int main()
 
 	if (readPoly(&headPoly1, &headPoly2) == EXIT_SUCCESS)
 	{
-		printf("File read successfully!\n");
-		printPoly("First polynome: ", headPoly1.Next);
-		printPoly("Second polynome: ", headPoly2.Next);
+		printf("File read successfully!\n\n");
+		printf("First polynome:\n");
+		printPoly(headPoly1.Next);		// ne radi jer je headPoly1.Next == NULL ???
+		printf("Second polynome:\n");
+		printPoly(headPoly2.Next);
 	}
 
 	return 0;
@@ -81,31 +83,40 @@ int readFileIntoList(Position P, char* buffer)
 	char* tempBuffer = buffer;
 	int tempCoef = 0;
 	int tempExp = 0;
-	int noChar = 0;		// brojimo koliko smo char vec procitali u liniji
+	int noChar = 0;		// brojimo koliko char smo vec procitali u liniji
 	int status = 0;
 	Position newPolynome = NULL;
 
 	while (strlen(tempBuffer) > 0)
 	{
 		status = sscanf(tempBuffer, " %dx^%d %n", &tempCoef, &tempExp, &noChar);	// ucitava vrijednosti iz dat u varijable
-		if (status != 2)		// sscanf !2 jer vraca broj varijabli koje je procitao
+		if (status != 2)		// sscanf !2 jer vraca broj varijabli koje je procitao, %n se ne broji kao varijabla ?
 		{
 			printf("File read unsuccessfully\n");
 			return EXIT_FAILURE;
 		}
 
 		newPolynome = createElement(tempCoef, tempExp);		// stvaramo novi element
-		if (!newPolynome) {
+		if (!newPolynome)
 			return EXIT_FAILURE;
-		}
 
-		//sortPoly(P, newPolynome);
+		//connectList(P, newPolynome);
 
 		tempBuffer += noChar;		// pomicemo pointer u liniji koju citamo
 	}
 
 	return EXIT_SUCCESS;
 }
+
+/*int connectList(Position P, Position newPolynome)
+{
+	Position current = P;
+
+	while (current->Next != NULL && current->Next->Exponent > newPolynome->Exponent)
+		current = current->Next;
+
+	return EXIT_SUCCESS;
+}*/
 
 Position createElement(int coef, int exp)
 {
@@ -124,73 +135,19 @@ Position createElement(int coef, int exp)
 	return q;
 }
 
-/*int sortPoly(Position P, Position newP) {
-	Position current = head;
-
-	// checks exponents so it can be sorted
-	while (current->next != NULL && current->next->exponent > newElement->exponent) {
-		current = current->next;
-	}
-
-	mergeAfter(current, newElement);
-
-	return EXIT_SUCCESS;
-}*/
-
-/*int printPoly(char* polyNum, Position P)
+int printPoly(Position P)
 {
-	printf(" %s = ", polyNum);
-	if (P) {
-		if (P->Exponent < 0) {
-			if (P->Coefficient == 1) {
-				printf("x^(%d)", P->Exponent);
-			}
-			else {
-				printf("%dx^(%d)", P->Coefficient, P->Exponent);
-			}
-		}
-		else {
-			if (P->Coefficient == 1) {
-				printf("x^%d", P->Exponent);
-			}
-			else {
-				printf("%dx^%d", P->Coefficient, P->Exponent);
-			}
-		}
+	if (P)		// ne printa jer je P = NULL ??? kako cu uvezati elemente ???
+	{
+		if (P->Coefficient == 1)
+			printf("x^%d ", P->Exponent);
+		else
+			printf("%dx^%d ", P->Coefficient, P->Exponent);
 
 		P = P->Next;
 	}
 
-	for (; P != NULL; P = P->Next) {
-		if (P->Coefficient < 0) {
-			if (P->Exponent < 0) {
-				printf(" - %dx^(%d)", abs(P->Coefficient), P->Exponent);
-			}
-			else {
-				printf(" - %dx^%d", abs(P->Coefficient), P->Exponent);
-			}
-		}
-		else {
-			if (P->Exponent < 0) {
-				if (P->Coefficient == 1) {
-					printf(" + x^(%d)", P->Exponent);
-				}
-				else {
-					printf(" + %dx^(%d)", P->Coefficient, P->Exponent);
-				}
-			}
-			else {
-				if (P->Coefficient == 1) {
-					printf(" + x^%d", P->Exponent);
-				}
-				else {
-					printf(" + %dx^%d", P->Coefficient, P->Exponent);
-				}
-			}
-		}
-	}
-
 	printf("\n");
 	return EXIT_SUCCESS;
-}*/
+}
 
