@@ -2,11 +2,13 @@
 citaju iz datoteke.
 Napomena: Eksponenti u datoteci nisu nuzno sortirani. */
 
+
+
 #define _CRT_SECURE_NO_WARNINGS
-#include<stdio.h>
-#include<malloc.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <malloc.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define MAX_LENGTH 1024
 #define FILE_NOT_OPEN -1
@@ -87,7 +89,7 @@ int readFileIntoList(Position P, char* buffer)
 	int status = 0;
 	Position newPolynome = NULL;
 
-	while (strlen(tempBuffer) > 0)
+	while (strlen(tempBuffer) > 0)		// samo cita prvi element polinoma ???
 	{
 		status = sscanf(tempBuffer, " %dx^%d %n", &tempCoef, &tempExp, &noChar);	// ucitava vrijednosti iz dat u varijable
 		if (status != 2)		// sscanf !2 jer vraca broj varijabli koje je procitao, %n se ne broji kao varijabla ?
@@ -100,7 +102,7 @@ int readFileIntoList(Position P, char* buffer)
 		if (!newPolynome)
 			return EXIT_FAILURE;
 
-		//connectList(P, newPolynome);
+		connectList(P, newPolynome);
 
 		tempBuffer += noChar;		// pomicemo pointer u liniji koju citamo
 	}
@@ -108,15 +110,22 @@ int readFileIntoList(Position P, char* buffer)
 	return EXIT_SUCCESS;
 }
 
-/*int connectList(Position P, Position newPolynome)
+int connectList(Position P, Position newPolynome)
 {
 	Position current = P;
 
-	while (current->Next != NULL && current->Next->Exponent > newPolynome->Exponent)
-		current = current->Next;
+	while (P->Next != NULL)
+	{
+		P = P->Next;
+	}
+	newPolynome->Next = P->Next;
+	P->Next = newPolynome;
+
+	//while (current->Next != NULL && current->Next->Exponent > newPolynome->Exponent)
+		//current = current->Next;
 
 	return EXIT_SUCCESS;
-}*/
+}
 
 Position createElement(int coef, int exp)
 {
@@ -151,3 +160,27 @@ int printPoly(Position P)
 	return EXIT_SUCCESS;
 }
 
+
+
+
+/* KOD S LABOVA */
+
+damn
+
+polinomi moraju prvo bit sortirani
+tj koristimo sortirani unos u listu to je bice ono s predavanja idk
+
+
+/* 5. zadatak POSTFIX I STOGOVI 
+
+stog - mozemo brisat samo sa pocetka i dodavat samo na pocetak -> ovako cemo radit u zadatcima
+		tj brisat samo sa kraja i dodavat samo na kraj */
+
+/*
+		2 2 * 3 - 5 + 3 3 * *		---> postfix izraz
+*/
+
+koristimo nazive push(dodajemo u listu) i pop(brisemo iz liste)
+push == insert at front
+
+kad izbrisemo el iz stoga zapamtimo njegov rezultat
