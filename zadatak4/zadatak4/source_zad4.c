@@ -26,23 +26,41 @@ typedef struct _Polynome {
 int readPoly(Position P1, Position P2);				// cita polinom iz datoteke
 int readFileIntoList(Position P, char* buffer);		// sadrzaj datoteke ucitava u listu
 Position createElement(int coef, int exp);			// stvara novi element
+int insertSorted(Position P, Position newPolynome);
+int mergeElements(Position current, Position newPolynome);
 int printPoly(Position P);
 int connectList(Position P, Position newPolynome);
-//int polySum();
+int polySum(Position PolySum, Position Poly1, Position Poly2);
+int insertNewElement(int coef, int exp, Position current);
 //int polyMultiply();
 
 int main()
 {
 	Polynome headPoly1 = { .Coefficient = 0, .Exponent = 0, .Next = NULL };
 	Polynome headPoly2 = { .Coefficient = 0, .Exponent = 0, .Next = NULL };
+	Polynome headPolySum = { .Coefficient = 0, .Exponent = 0, .Next = NULL };
+	Polynome headPolyMultiply = { .Coefficient = 0, .Exponent = 0, .Next = NULL };
+	
 
 	if (readPoly(&headPoly1, &headPoly2) == EXIT_SUCCESS)
 	{
 		printf("File read successfully!\n\n");
 		printf("First polynome:\n");
-		printPoly(headPoly1.Next);		// ne radi jer je headPoly1.Next == NULL ???
+		printPoly(headPoly1.Next);
 		printf("Second polynome:\n");
 		printPoly(headPoly2.Next);
+
+		polySum(&headPolySum, headPoly1.Next, headPoly2.Next);		// doesnt work ???
+		printf("Polynome sum:\n");
+		printPoly(headPolySum.Next);
+
+		/*multiplyPoly(&headPolyMultiply, headPoly1.next, headPoly2.next);
+		printPoly("Multiplied polynomes: ", headPolyMultiply.next);
+
+		freeMemory(&headPoly1);
+		freeMemory(&headPoly2);
+		freeMemory(&headPolyAdd);
+		freeMemory(&headPolyMultiply);*/
 	}
 
 	return 0;
@@ -89,10 +107,10 @@ int readFileIntoList(Position P, char* buffer)
 	int status = 0;
 	Position newPolynome = NULL;
 
-	while (strlen(tempBuffer) > 0)		// samo cita prvi element polinoma ???
+	while (strlen(tempBuffer) > 0)
 	{
-		status = sscanf(tempBuffer, " %dx^%d %n", &tempCoef, &tempExp, &noChar);	// ucitava vrijednosti iz dat u varijable
-		if (status != 2)		// sscanf !2 jer vraca broj varijabli koje je procitao, %n se ne broji kao varijabla ?
+		status = sscanf(tempBuffer, " %dx^%d %n", &tempCoef, &tempExp, &noChar);
+		if (status != 2)
 		{
 			printf("File read unsuccessfully\n");
 			return EXIT_FAILURE;
@@ -102,9 +120,48 @@ int readFileIntoList(Position P, char* buffer)
 		if (!newPolynome)
 			return EXIT_FAILURE;
 
-		connectList(P, newPolynome);
+		insertSorted(P, newPolynome);
 
 		tempBuffer += noChar;		// pomicemo pointer u liniji koju citamo
+	}
+
+	return EXIT_SUCCESS;
+}
+
+int insertSorted(Position P, Position newPolynome)
+{
+	Position current = P;
+
+	while (current->Next != NULL && current->Next->Exponent > newPolynome->Exponent)
+		current = current->Next;
+
+	mergeElements(current, newPolynome);
+
+	return EXIT_SUCCESS;
+}
+
+int mergeElements(Position current, Position newPolynome)
+{
+	if (current->Next == NULL || current->Next->Exponent != newPolynome->Exponent)
+	{
+		newPolynome->Next = current->Next;
+		current->Next = newPolynome;
+	}
+	else
+	{
+		int newCoefficient = current->Next->Coefficient + newPolynome->Coefficient;
+		Position delete = NULL;
+
+		if (newCoefficient == 0)
+		{
+			delete = current->Next;
+			current->Next = delete->Next;
+			free(delete);
+		}
+		else
+			current->Next->Coefficient = newCoefficient;
+
+		free(newPolynome);
 	}
 
 	return EXIT_SUCCESS;
@@ -120,9 +177,6 @@ int connectList(Position P, Position newPolynome)
 	}
 	newPolynome->Next = P->Next;
 	P->Next = newPolynome;
-
-	//while (current->Next != NULL && current->Next->Exponent > newPolynome->Exponent)
-		//current = current->Next;
 
 	return EXIT_SUCCESS;
 }
@@ -146,41 +200,88 @@ Position createElement(int coef, int exp)
 
 int printPoly(Position P)
 {
-	if (P)		// ne printa jer je P = NULL ??? kako cu uvezati elemente ???
-	{
-		if (P->Coefficient == 1)
-			printf("x^%d ", P->Exponent);
-		else
-			printf("%dx^%d ", P->Coefficient, P->Exponent);
-
-		P = P->Next;
+	for (; P != NULL; P = P->Next) {
+		if (P->Coefficient < 0) {
+			if (P->Exponent < 0) {
+				printf(" - %dx^(%d)", abs(P->Coefficient), P->Exponent);
+			}
+			else {
+				printf(" - %dx^%d", abs(P->Coefficient), P->Exponent);
+			}
+		}
+		else {
+			if (P->Exponent < 0) {
+				if (P->Coefficient == 1) {
+					printf(" + x^(%d)", P->Exponent);
+				}
+				else {
+					printf(" + %dx^(%d)", P->Coefficient, P->Exponent);
+				}
+			}
+			else {
+				if (P->Coefficient == 1) {
+					printf(" + x^%d", P->Exponent);
+				}
+				else {
+					printf(" + %dx^%d", P->Coefficient, P->Exponent);
+				}
+			}
+		}
 	}
 
 	printf("\n");
 	return EXIT_SUCCESS;
 }
 
+int insertNewElement(int coef, int exp, Position current)
+{
+	Position newElement = createElement(coef, exp);
 
+	if (!newElement)
+		return EXIT_FAILURE;
 
+	newElement->Next = current->Next;
+	current->Next = newElement;
 
-/* KOD S LABOVA */
+	return EXIT_SUCCESS;
+}
 
-damn
+int polySum(Position PolySum, Position Poly1, Position Poly2)
+{
+	Position currentPoly1 = Poly1;
+	Position currentPoly2 = Poly2;
+	Position currentSum = PolySum;
+	Position remainingPoly = NULL;
 
-polinomi moraju prvo bit sortirani
-tj koristimo sortirani unos u listu to je bice ono s predavanja idk
+	while (currentPoly1 != NULL && currentPoly2 != NULL) {
+		if (currentPoly1->Exponent == currentPoly2->Exponent) {
+			insertNewElement(currentPoly1->Coefficient + currentPoly2->Coefficient, currentPoly1->Exponent, currentSum);		// stvaramo novi element koji je zbroj elemenata iz prva dva polinoma
+			currentPoly1 = currentPoly1->Next;
+			currentPoly2 = currentPoly2->Next;
+			currentSum = currentSum->Next;		// pomicemo poziciju svih polinoma na sljedeci element
+		}
+		else if (currentPoly1->Exponent < currentPoly2->Exponent) {
+			insertNewElement(currentPoly1->Coefficient, currentPoly1->Exponent, currentSum);
+			currentPoly1 = currentPoly1->Next;
+			currentSum = currentSum->Next;
+		}
+		else {
+			insertNewElement(currentPoly2->Coefficient, currentPoly2->Exponent, currentSum);
+			currentPoly2 = currentPoly2->Next;
+			currentSum = currentSum->Next;
+		}
 
+	}
+	if (currentPoly1 == NULL)
+		remainingPoly = currentPoly2;
+	else
+		remainingPoly = currentPoly1;
+	
+	while (remainingPoly != NULL) {
+		insertNewElement(remainingPoly->Coefficient, remainingPoly->Exponent, currentSum);
+		remainingPoly = remainingPoly->Next;
+		currentSum = currentSum->Next;
+	}
 
-/* 5. zadatak POSTFIX I STOGOVI 
-
-stog - mozemo brisat samo sa pocetka i dodavat samo na pocetak -> ovako cemo radit u zadatcima
-		tj brisat samo sa kraja i dodavat samo na kraj */
-
-/*
-		2 2 * 3 - 5 + 3 3 * *		---> postfix izraz
-*/
-
-koristimo nazive push(dodajemo u listu) i pop(brisemo iz liste)
-push == insert at front
-
-kad izbrisemo el iz stoga zapamtimo njegov rezultat
+	return EXIT_SUCCESS;
+}
