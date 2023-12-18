@@ -32,6 +32,8 @@ int main()
     Position result = NULL;
 	int choice, value;
 
+    root = insert(root, 5);
+
 	while (1)
 	{
 		printf("\nChoose an option:\n");
@@ -147,12 +149,12 @@ int inorder(Position root)
 {
     if (root)
     {
-        printf("( ");
         inorder(root->left);
         printf("%d ", root->value);
         inorder(root->right);
-        printf(" )");
     }
+
+    printf("\n");
 
     return EXIT_SUCCESS;
 }
@@ -166,6 +168,8 @@ int preorder(Position root)
         preorder(root->right);
     }
 
+    printf("\n");
+
     return EXIT_SUCCESS;
 }
 
@@ -177,6 +181,8 @@ int postorder(Position root)
         postorder(root->right);
         printf("%d ", root->value);
     }
+
+    printf("\n");
 
     return EXIT_SUCCESS;
 }
@@ -203,6 +209,8 @@ int levelOrder(Position root)
         if (current->right != NULL)
             queue[rear++] = current->right;
     }
+
+    printf("\n");
 
     return EXIT_SUCCESS;
 }
