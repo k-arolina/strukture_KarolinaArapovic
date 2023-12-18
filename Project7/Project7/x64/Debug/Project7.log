@@ -1,0 +1,8 @@
+﻿  zadatak7.c
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Project7\Project7\zadatak7.c(90,36): warning C4047: 'function': 'PositionLevel' differs in levels of indirection from 'PositionLevel *'
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Project7\Project7\zadatak7.c(90,26): warning C4024: 'pop': different types for formal and actual parameter 1
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Project7\Project7\zadatak7.c(138,52): warning C4047: '=': 'PositionDirectory' differs in levels of indirection from 'PositionDirectory (__cdecl *)(char *)'
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Project7\Project7\zadatak7.c(140,21): warning C4047: 'return': 'PositionDirectory' differs in levels of indirection from 'PositionDirectory (__cdecl *)(char *)'
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Project7\Project7\zadatak7.c(195,14): warning C4047: 'return': 'int' differs in levels of indirection from 'void *'
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Project7\Project7\zadatak7.c(200): warning C4715: 'push': not all control paths return a value
+  Project7.vcxproj -> C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\git repos\strukture_KarolinaArapovic\Project7\x64\Debug\Project7.exe
