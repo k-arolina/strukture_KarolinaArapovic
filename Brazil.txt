@@ -1,0 +1,4 @@
+Brasilia	2143000
+Manaus		2020000
+Salvador	6314000
+Recife		3500000
