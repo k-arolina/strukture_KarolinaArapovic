@@ -30,7 +30,7 @@ typedef struct City {
 	CityPosition right;
 	CityPosition left;
 
-}city;
+} city;
 
 struct Country;
 typedef struct Country* CountryPosition;
@@ -42,10 +42,15 @@ typedef struct Country {
 	CityPosition cityRootTree;
 	city cityHead;
 
-}_Country;
+} _Country;
+
+struct _hash_table;
+typedef struct _hash_table HashTable;
+struct _hash_table {
+	CountryPosition buckets[HASH_TABLE_SIZE];
+};
 
 CountryPosition ReadFileOfCountries(CountryPosition country_head, CountryPosition country_root);
-int createNewCountryFromBuffer(char* countryName, char* countryFile, CountryPosition* countries);
 int createNewCountryFromBuffer(char* countryName, char* countryFile, CountryPosition* countries);
 CountryPosition CreateNewCountryNode(char* countryName);
 int insertSortedCountryList(CountryPosition headCountry, CountryPosition newCountry);
@@ -59,6 +64,13 @@ int printCountryTree(CountryPosition countryRootTree);
 int printCityList(CityPosition cityHeadList);
 int findCountries(CountryPosition countryHeadList, CountryPosition countryRootTree, CountryPosition* countries);
 CountryPosition searchCountryTree(CountryPosition countryRootTree, char* countryName);
+
+HashTable* createHashTable();
+unsigned int calculateHash(char* countryName);
+void insertCountryIntoHashTable(HashTable* hashTable, CountryPosition newCountry);
+CountryPosition searchCountryInHashTable(HashTable* hashTable, char* countryName);
+int printAllCountriesFromHash(HashTable* hashTable);
+
 
 int main()
 {
@@ -331,4 +343,78 @@ CountryPosition searchCountryTree(CountryPosition countryRootTree, char* country
 		return searchCountryTree(countryRootTree->left, countryName);
 
 	return searchCountryTree(countryRootTree->right, countryName);
+}
+
+
+HashTable* createHashTable()
+{
+	HashTable* hashTable = (HashTable*)malloc(sizeof(HashTable));
+	if (!hashTable)
+	{
+		printf("Hash table memory allocation unsuccessful\n");
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < HASH_TABLE_SIZE; i++)
+		hashTable->buckets[i] = NULL;
+
+	return hashTable;
+}
+
+unsigned int calculateHash(char* countryName)
+{
+	unsigned int value = 0;
+	int i = 0;
+	while (i < 5 && countryName[i] != '\0')
+	{
+		value += (unsigned int)countryName[i];
+		i++;
+	}
+
+	return value % HASH_TABLE_SIZE;
+}
+
+
+void insertCountryIntoHashTable(HashTable* hashTable, CountryPosition newCountry)
+{
+	unsigned int index = calculateHash(newCountry->name);
+
+	if (hashTable->buckets[index] == NULL)
+	{
+		hashTable->buckets[index] = newCountry;
+		newCountry->next = NULL;
+	}
+
+	else
+	{
+		newCountry->next = hashTable->buckets[index];
+		hashTable->buckets[index] = newCountry;
+	}
+}
+
+CountryPosition searchCountryInHashTable(HashTable* hashTable, char* countryName)
+{
+	unsigned int index = calculateHash(countryName);
+	CountryPosition currentCountry = hashTable->buckets[index];
+
+	while (currentCountry != NULL && strcmp(currentCountry->name, countryName) != 0)
+		currentCountry = currentCountry->next;
+
+	return currentCountry;
+}
+
+int printAllCountriesFromHash(HashTable* hashTable)
+{
+	for (int i = 0; i < HASH_TABLE_SIZE; i++)
+	{
+		CountryPosition currentCountry = NULL;
+		currentCountry = hashTable->buckets[i];
+
+		while (currentCountry != NULL)
+		{
+			printf("%s\n", currentCountry->name);
+			printTownTree(currentCountry->townRootTree);
+			currentCountry = currentCountry->next;
+		}
+	}
 }
