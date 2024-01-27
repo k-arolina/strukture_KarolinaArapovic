@@ -1,0 +1,4 @@
+Tokio		13960000
+Yokohama	3725000
+Osaka		2691000
+Kyoto		1475000

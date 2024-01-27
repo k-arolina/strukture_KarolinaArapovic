@@ -1,0 +1,4 @@
+﻿  zadatak7.c
+FileName.obj : error LNK2019: unresolved external symbol newSubDirectory referenced in function menu
+FileName.obj : error LNK2019: unresolved external symbol createDirectory referenced in function newSubdirectory
+C:\Users\WIN10\Desktop\dokumenti faks\strukture podataka\visual studio projects\zadatak7\x64\Debug\zadatak7.exe : fatal error LNK1120: 2 unresolved externals
