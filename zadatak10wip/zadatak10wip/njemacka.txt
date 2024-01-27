@@ -1,4 +1,0 @@
-Berlin		3645000
-Bonn		327258	
-Bremen		569352
-Hamburg		1841000	

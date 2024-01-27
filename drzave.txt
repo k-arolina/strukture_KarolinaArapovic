@@ -1,5 +1,0 @@
-Hrvatska	Hrvatska.txt
-Njemacka	Njemacka.txt
-Australija	Australija.txt
-Japan		Japan.txt
-Brazil		Brazil.txt

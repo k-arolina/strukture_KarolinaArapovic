@@ -1,4 +1,0 @@
-Sydney		5312000
-Melbourne	5078000
-Canberra	395790
-Brisbane	2280000
